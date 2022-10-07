@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<mavlink>
+  <include>common.xml</include>
+  <version>1</version>
+  <enums>
+      <enum name="METEO_SOURCE">
+        <entry value="0" name="METEO_SOURCE_GROUND">
+          <description>Ground measured OAT</description>
+        </entry>
+        <entry value="1" name="METEO_SOURCE_AIR">
+          <description>Air measured OAT</description>
+        </entry>
+      </enum>
+      <enum name="ATMOSFERIC_PRESURE_TYPE">
+        <entry value="0" name="QNH">
+          <description>Atmosferic presure recalculated for sea level</description>
+        </entry>
+        <entry value="1" name="QFE">
+          <description>Local atmosferic presure</description>
+        </entry>
+      </enum>
+      <enum name="AURORA_ACTION">
+      <!-- Definitions of specific aurora action and comment each of additional parametrs needed for action-->
+        <entry value="0" name="LAND">
+          <description>Land UAV</description>
+        </entry>
+        <entry value="1" name="TAKE_OFF">
+          <description>Take-OFF UAV, action_param_1: alttitude after Take-OFF in m </description>
+        </entry>
+        <entry value="2" name="ORBIT_LEFT">
+          <description>Take-OFF UAV, action_param_1: radius of orbit in m m </description>
+        </entry>
+        <entry value="3" name="ORBIT_RIGHT">
+          <description>Take-OFF UAV, action_param_1: radius of orbit in m m </description>
+        </entry>
+        <entry value="4" name="EXPANDING_SQUARE_PATTERN">
+          <description>Take-OFF UAV, action_param_1: size of side of sqare in m </description>
+        </entry>
+        <entry value="5" name="PARALLEL_TRACK_PATTERN">
+          <description>Take-OFF UAV, action_param_1: size of side of sqare in m </description>
+        </entry>
+        <entry value="6" name="SECTOR_PATTERN">
+          <description>Take-OFF UAV, action_param_1: size of side of sqare in m </description>
+        </entry>
+      </enum>
+      <enum name="FLAG_NAME">
+      <!-- FLAG names -->
+        <entry value="0" name="LPPF_flag">
+          <description>LPPF health flag</description>
+        </entry>
+        <entry value="1" name="AFS_VIS_ABS_LOC_FLAG">
+          <description>AFS Visual-based absolute localization health flag</description>
+        </entry>
+        <entry value="2" name="AFS_GNSS_ABS_LOC_FLAG">
+          <description>AFS GNSS absolute localization health flag</description>
+        </entry>
+        <entry value="3" name="AFS_REL_LOC_FLAG">
+          <description>AFS relative localization and mapping system health flag</description>
+        </entry>
+      </enum>
+      <enum name="FLAG_STATUS">
+        <entry value="0" name="ERROR">
+          <description>ERROR state</description>
+        </entry>
+        <entry value="1" name="OK">
+          <description>OK state</description>
+        </entry>
+      </enum>
+  </enums>
+  <messages>
+    <!-- Messages specifically designated for the Aurora system -->
+    <message id="13101" name="AURORA_MISSION_ORIGN">
+      <description>Message encoding a mission origin</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="x">x, depending on coordination frame </field>
+      <field type="float" name="y">z, depending on coordination frame </field>
+      <field type="uint8_t" name="z" >y, depending on coordination frame  </field>
+      <field type="uint8_t" name="MAV_frame" enum = "MAV_FRAME">coordination frame</field>
+    </message>
+    <message id="13102" name="AURORA_MISSION_DESTINATION">
+      <description>Message encoding a mission destination.</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="x">x, depending on coordination frame </field>
+      <field type="float" name="y">z, depending on coordination frame </field>
+      <field type="uint8_t" name="z" >y, depending on coordination frame  </field>
+      <field type="uint8_t" name="MAV_frame" enum = "MAV_FRAME">coordination frame</field>
+      <field type="uint64_t" name="RTA_timestamp">Requested time of arrival, UNIX timestamp in seconds </field>
+      <field type="uint16_t" name="action_duration">Duration of reqested action in seconds</field>
+      <field type="uint8_t" name="Aurora_action" enum="AURORA_ACTION">Requested action</field>
+      <field type="uint16_t" name="action_param_1">action param 1</field>
+      <field type="uint16_t" name="action_param_2">action param 2</field>
+      <field type="uint16_t" name="action_param_3">action param 3</field>  
+    </message>
+    <message id="13103" name="AURORA_POI">
+      <description>Message encoding a mission POI, requite action define by Aurora_action</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="x">x, depending on coordination frame </field>
+      <field type="float" name="y">y, depending on coordination frame </field>
+      <field type="uint8_t" name="z">z, depending on coordination frame  </field>
+      <field type="uint8_t" name="MAV_frame" enum = "MAV_FRAME">coordination frame</field>
+      <field type="uint64_t" name="RTA_timestamp">Requested time of arrival, UNIX timestamp in seconds </field>
+      <field type="uint16_t" name="action_duration">Duration of reqested action in seconds</field>
+      <field type="uint8_t" name="Aurora_action" enum="AURORA_ACTION">Requested action</field>
+      <field type="uint16_t" name="action_param_1">action param 1</field>
+      <field type="uint16_t" name="action_param_2">action param 2</field>
+      <field type="uint16_t" name="action_param_3">action param 3</field>  
+    </message>
+    <message id="13500" name="AURORA_METEO_TEMPERATURE">
+      <description>Message encoding a mission script item. This message is emitted upon a request for the next script item.</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="OAT">Outside Air Temperature degC</field>
+      <field type="uint8_t" name="meteo_source" enum = "METEO_SOURCE">OAT source </field>
+    </message>
+    <message id="13501" name="AURORA_METEO_WIND">
+      <description>Message encoding a mission script item. This message is emitted upon a request for the next script item.</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="wind_speed">Wind speed, m/s</field>
+      <field type="uint8_t" name="wind_dir">Wind direction, deg </field>
+      <field type="uint8_t" name="meteo_source" enum = "METEO_SOURCE">OAT source </field>
+    </message>
+    <message id="13502" name="AURORA_METEO_ATMOSFERIC_PRESURE">
+      <description>Message encoding a mission script item. This message is emitted upon a request for the next script item.</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="atmosferic_presure">Atmosferic presure, mbar</field>
+      <field type="uint8_t" name="presure_type" enum = "ATMOSFERIC_PRESURE_TYPE">Type of Atmospheric presure 0 = QNH, 1=QFE </field>
+    </message>
+    <message id="13600" name="AURORA_FLAGS">
+      <description>Message encoding a mission script item. This message is emitted upon a request for the next script item.</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="uint8_t" name="flag_name" enum = "FLAG_NAME">Name of flag</field>
+      <field type="uint8_t" name="flag_status" enum = "FLAG_STATUS">Status flag</field>
+      <field type="uint8_t" name="flag_detail">Status flag_detail</field>
+    </message>
+    <message id="13601" name="AURORA_ENDURANCE">
+      <description>Aurora endurance message contains minutes</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="uint8_t" name="endurnce_time">remaining time of flight</field>
+    </message>
+ 
+    <message id="13602" name="AURORA_GPP_POINT_OF_NO_RETURN">
+      <description>Aurora point of no-return</description>
+      <field type="uint8_t" name="target_system">System ID</field>
+      <field type="uint8_t" name="target_component">Component ID</field>
+      <field type="float" name="x">x, depending on coordination frame </field>
+      <field type="float" name="y">y, depending on coordination frame </field>
+      <field type="uint8_t" name="z">z, depending on coordination frame  </field>
+      <field type="uint8_t" name="MAV_frame" enum = "MAV_FRAME">coordination frame</field>
+    </message>
+  </messages>
+</mavlink>
+
+
+
